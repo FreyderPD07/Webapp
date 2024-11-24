@@ -106,7 +106,7 @@ try {
 
     <!-- Sección de Productos -->
     <section class="products">
-        <h2><?= $categoria_id ? "Productos de la Categoría" : "Productos Destacados" ?></h2>
+        <h2><?= $categoria_id ? "Productos de la Categoría" : "Productos Destacados..." ?></h2>
         <div class="product-grid">
             <?php if (!empty($productos)): ?>
                 <?php foreach ($productos as $producto): ?>
