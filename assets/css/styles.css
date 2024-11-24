@@ -1,11 +1,13 @@
 /* General */
-body {
-    font-family: 'Roboto', sans-serif;
+html, body {
     margin: 0;
     padding: 0;
-    background: #f4f4f9;
-    color: #333;
-    box-sizing: border-box;
+    min-height: 100vh; /* 100% de la altura de la ventana */
+    display: flex;
+    flex-direction: column; /* Permite apilar el contenido */
+}
+body > * {
+    flex: 1; /* Hace que el contenido principal ocupe el espacio disponible */
 }
 
 /* Header */
@@ -211,13 +213,10 @@ body {
 
 /* Footer */
 .footer {
-    background: linear-gradient(45deg, #1a1a2e, #162447);
-    color: white;
     text-align: center;
-    padding: 15px 20px;
-    font-size: 0.9rem;
+    background-color: #f4f4f4;
+    padding: 10px 0;
     position: relative;
     bottom: 0;
-    width: 100%;
-    letter-spacing: 1px;
+    width: 100%; /* Asegura que cubra toda la pantalla */
 }
