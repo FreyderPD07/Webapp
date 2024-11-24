@@ -1,0 +1,165 @@
+/* Estilo general */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f5f5f5;
+    color: #333;
+}
+
+/* Encabezado */
+.header {
+    background: linear-gradient(45deg, #121227, #333333);
+    color: #ffffff;
+    padding: 1.5rem;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-shadow: 0px 0px 10px #00d4ff;
+}
+
+/* Sección del checkout */
+.checkout-section {
+    max-width: 800px;
+    margin: 3rem auto;
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.checkout-section h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+    text-shadow: 0px 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Mensajes de error */
+.error {
+    color: #ff4b2b;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+/* Formulario */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+form h3 {
+    font-size: 1.2rem;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+form label {
+    font-size: 1rem;
+    color: #34495e;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+form select, 
+form input {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+form select:focus, 
+form input:focus {
+    border-color: #00d4ff;
+    box-shadow: 0px 0px 10px rgba(0, 212, 255, 0.5);
+    outline: none;
+}
+
+/* Botón de enviar */
+form .btn {
+    background: linear-gradient(45deg, #1de9b6, #1dc4e9);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+form .btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 0px 15px rgba(29, 201, 233, 0.5);
+    background: linear-gradient(45deg, #1dc4e9, #1de9b6);
+}
+
+/* Sugerencias */
+.suggestions {
+    border: 1px solid #ccc;
+    background: #fff;
+    max-height: 150px;
+    overflow-y: auto;
+    position: absolute;
+    z-index: 10;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.suggestion-item {
+    padding: 10px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #333;
+    border-bottom: 1px solid #eee;
+}
+
+.suggestion-item:hover {
+    background: #f0f0f0;
+}
+
+/* Resumen del pedido */
+.summary-section {
+    background: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 2rem;
+}
+
+.summary-section p {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+}
+
+.summary-section .btn {
+    display: block;
+    margin: 1rem auto 0;
+    padding: 0.8rem 2rem;
+    background: linear-gradient(45deg, #ff4b2b, #ff416c);
+    color: white;
+    text-align: center;
+    border-radius: 25px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.summary-section .btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 0px 15px rgba(255, 75, 43, 0.5);
+}

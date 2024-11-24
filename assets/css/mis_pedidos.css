@@ -1,0 +1,135 @@
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(45deg, #1a1a2e, #162447);
+    padding: 1rem 2rem;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.header .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.navbar .btn {
+    padding: 0.7rem 1.5rem;
+    margin-left: 0.5rem;
+    border: none;
+    border-radius: 25px;
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.navbar .btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px #007bff;
+}
+
+/* Orders Section */
+.orders-section {
+    padding: 2rem;
+}
+
+.orders-section h2 {
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+}
+
+/* Orders List */
+.orders-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+}
+
+.order-card {
+    border-radius: 15px;
+    padding: 1.5rem;
+    background: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    width: 300px;
+    text-align: center;
+}
+
+.order-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.order-card h3 {
+    font-size: 1.5rem;
+    color: #1a1a2e;
+    margin-bottom: 0.5rem;
+}
+
+.order-card p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+    color: #555;
+}
+
+.order-card .btn {
+    padding: 0.7rem 1.5rem;
+    border-radius: 25px;
+    background: linear-gradient(45deg, #1de9b6, #1dc4e9);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+.order-card .btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(29, 233, 182, 0.8);
+}
+
+/* Error Message */
+.error {
+    color: #ff4b2b;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .orders-section {
+        padding: 1rem;
+    }
+
+    .order-card {
+        width: 100%;
+    }
+
+    .navbar .btn {
+        margin: 0.5rem 0;
+        padding: 0.5rem 1rem;
+    }
+}

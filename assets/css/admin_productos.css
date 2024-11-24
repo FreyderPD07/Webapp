@@ -1,0 +1,225 @@
+/* General */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f5f5f5;
+    color: #333;
+}
+
+/* Header de administración */
+.header-admin {
+    background: linear-gradient(45deg, #121227, #333333);
+    color: #ffffff;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.header-admin h1 {
+    font-size: 24px;
+    margin: 0;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-shadow: 0px 0px 10px #00d4ff;
+}
+
+.header-admin button {
+    background: linear-gradient(45deg, #00d4ff, #0099ff);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.header-admin button:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 0px 15px #00d4ff;
+}
+
+/* Contenido principal */
+main {
+    max-width: 1100px;
+    margin: 30px auto;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+main h2 {
+    text-align: center;
+    color: #444444;
+    margin-bottom: 20px;
+    font-size: 28px;
+    text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Tabla de productos */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+table th,
+table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background: linear-gradient(45deg, #00d4ff, #0099ff);
+    color: #ffffff;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+table td {
+    color: #333;
+    font-size: 14px;
+}
+
+table tr:hover {
+    background: #f1f1f1;
+}
+
+/* Botones en la tabla */
+table .btn {
+    display: inline-block;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 25px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+table .btn.edit {
+    background: linear-gradient(45deg, #1de9b6, #1dc4e9);
+    color: white;
+}
+
+table .btn.edit:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 0px 15px rgba(29, 233, 182, 0.5);
+}
+
+table .btn.delete {
+    background: linear-gradient(45deg, #ff4b2b, #ff416c);
+    color: white;
+}
+
+table .btn.delete:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 0px 15px rgba(255, 75, 43, 0.5);
+}
+
+/* Paginación */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination a {
+    text-decoration: none;
+    padding: 10px 20px;
+    margin: 0 5px;
+    border-radius: 25px;
+    background: linear-gradient(45deg, #00d4ff, #0099ff);
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.pagination a.active {
+    background: linear-gradient(45deg, #1de9b6, #1dc4e9);
+}
+
+.pagination a:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 0px 15px #00d4ff;
+}
+
+/* Mensajes de error */
+.error {
+    text-align: center;
+    color: #ff4b2b;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+/* Formulario de filtros */
+.filter-form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.filter-form div {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-form label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555555;
+    text-transform: uppercase;
+}
+
+.filter-form input,
+.filter-form select {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.1);
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+}
+
+.filter-form input:focus,
+.filter-form select:focus {
+    outline: none;
+    border-color: #00d4ff;
+    box-shadow: 0px 0px 10px rgba(0, 212, 255, 0.5);
+}
+
+.filter-form button {
+    padding: 10px 20px;
+    background: linear-gradient(45deg, #1de9b6, #1dc4e9);
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.filter-form button:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 0px 15px rgba(29, 233, 182, 0.5);
+}
