@@ -3,10 +3,21 @@ header('Content-Type: application/json');
 require_once('../db/config.php');
 
 try {
+    // Verificar que los parámetros GET existen
     if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search'], $_GET['departamento_id'])) {
         $search = trim($_GET['search']);
         $departamentoId = intval($_GET['departamento_id']);
 
+        // Registrar los parámetros para depuración
+        file_put_contents('log.txt', print_r($_GET, true), FILE_APPEND);
+
+        // Validar que los parámetros no están vacíos
+        if (empty($search) || $departamentoId <= 0) {
+            echo json_encode(['success' => false, 'message' => 'Parámetros inválidos.']);
+            exit;
+        }
+
+        // Preparar la consulta SQL
         $stmt = $conn->prepare("
             SELECT CiudadID, Nombre_Ciudad 
             FROM ciudades 
@@ -14,50 +25,25 @@ try {
         ");
         $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
         $stmt->bindValue(':departamento_id', $departamentoId, PDO::PARAM_INT);
-        $stmt->execute();
 
+        // Registrar la consulta SQL generada para depuración
+        $query = "SELECT CiudadID, Nombre_Ciudad 
+                  FROM ciudades 
+                  WHERE Nombre_Ciudad LIKE '%$search%' AND DepartamentoID = $departamentoId;";
+        file_put_contents('query_log.txt', $query . "\n", FILE_APPEND);
+
+        $stmt->execute();
         $municipios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Responder con los resultados en formato JSON
         echo json_encode(['success' => true, 'municipios' => $municipios]);
         exit;
-    }
-
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $data = json_decode(file_get_contents('php://input'), true);
-        $municipio = trim($data['municipio'] ?? '');
-        $departamentoId = intval($data['departamento_id'] ?? 0);
-
-        if ($municipio && $departamentoId) {
-            $stmt = $conn->prepare("
-                SELECT CiudadID 
-                FROM ciudades 
-                WHERE Nombre_Ciudad = :municipio AND DepartamentoID = :departamento_id
-            ");
-            $stmt->bindValue(':municipio', $municipio, PDO::PARAM_STR);
-            $stmt->bindValue(':departamento_id', $departamentoId, PDO::PARAM_INT);
-            $stmt->execute();
-
-            $existing = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($existing) {
-                echo json_encode(['success' => true, 'ciudad_id' => $existing['CiudadID']]);
-            } else {
-                $stmt = $conn->prepare("
-                    INSERT INTO ciudades (Nombre_Ciudad, DepartamentoID) 
-                    VALUES (:municipio, :departamento_id)
-                ");
-                $stmt->bindValue(':municipio', $municipio, PDO::PARAM_STR);
-                $stmt->bindValue(':departamento_id', $departamentoId, PDO::PARAM_INT);
-                $stmt->execute();
-
-                $ciudadId = $conn->lastInsertId();
-                echo json_encode(['success' => true, 'ciudad_id' => $ciudadId]);
-            }
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Datos inválidos.']);
-        }
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Solicitud inválida.']);
         exit;
     }
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'message' => 'Error interno: ' . $e->getMessage()]);
     exit;
 }
+?>

@@ -87,7 +87,7 @@ try {
             <?php else: ?>
                 <button class="btn" onclick="window.location.href='login.php'">Iniciar Sesión</button>
             <?php endif; ?>
-            <button class="btn" onclick="window.location.href='carrito.php'">Carrito</button>
+            <button class="btn" id="carrito-button">Carrito</button>
         </nav>
     </header>
 
@@ -136,36 +136,58 @@ try {
     <!-- Script de Interacción -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const buttons = document.querySelectorAll(".add-to-cart");
+        // Verificar si el usuario está autenticado (pasado desde PHP)
+        const isAuthenticated = <?= json_encode($usuario_id !== null) ?>;
 
-            buttons.forEach(button => {
-                button.addEventListener("click", function () {
-                    const productId = this.dataset.id;
-                    const cantidad = this.dataset.cantidad;
+        // Botón "Carrito"
+        const carritoButton = document.getElementById("carrito-button");
+        carritoButton.addEventListener("click", function () {
+            if (!isAuthenticated) {
+                // Mostrar alerta si el usuario no está autenticado
+                alert("Debe iniciar sesión para acceder al carrito.");
+            } else {
+                // Redirigir al carrito si está autenticado
+                window.location.href = 'carrito.php';
+            }
+        });
 
-                    // Realizar solicitud AJAX
-                    fetch("add_to_cart.php", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({ producto_id: productId, cantidad: cantidad })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert("Producto añadido al carrito!");
-                        } else {
-                            alert(data.message || "Error al añadir el producto al carrito.");
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error:", error);
-                        alert("Hubo un problema con la solicitud.");
-                    });
+        // Botones "Añadir al Carrito"
+        const buttons = document.querySelectorAll(".add-to-cart");
+
+        buttons.forEach(button => {
+            button.addEventListener("click", function () {
+                if (!isAuthenticated) {
+                    // Mostrar alerta si el usuario no está autenticado
+                    alert("Debe iniciar sesión para añadir productos al carrito.");
+                    return; // Detener la ejecución si no está autenticado
+                }
+
+                const productId = this.dataset.id;
+                const cantidad = this.dataset.cantidad;
+
+                // Realizar solicitud AJAX para añadir el producto al carrito
+                fetch("add_to_cart.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ producto_id: productId, cantidad: cantidad })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Producto añadido al carrito!");
+                    } else {
+                        alert(data.message || "Error al añadir el producto al carrito.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Hubo un problema con la solicitud.");
                 });
             });
         });
+    });
     </script>
 </body>
 </html>

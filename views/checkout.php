@@ -17,7 +17,7 @@ try {
         JOIN productos p ON c.ProductoID = p.ProductoID
         WHERE c.UsuarioID = :usuario_id
     ");
-    $stmt_carrito->bindParam(':usuario_id', $usuario_id);
+    $stmt_carrito->bindParam(':usuario_id', $usuario_id, PDO::PARAM_INT);
     $stmt_carrito->execute();
     $carrito = $stmt_carrito->fetchAll(PDO::FETCH_ASSOC);
 } catch (Exception $e) {
@@ -53,78 +53,6 @@ try {
 } catch (Exception $e) {
     die("Error al obtener departamentos: " . $e->getMessage());
 }
-
-// Procesar formulario de pago y envío
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $ciudad_id = intval($_POST['ciudad_id'] ?? 0);
-    $municipio = trim($_POST['municipio'] ?? '');
-    $departamento_id = intval($_POST['departamento'] ?? 0);
-    $direccion_exacta = trim($_POST['direccion'] ?? '');
-    $metodo_envio_id = intval($_POST['metodo_envio'] ?? 0);
-    $metodo_pago_id = intval($_POST['metodo_pago'] ?? 0);
-
-    if (!$municipio || !$departamento_id || !$direccion_exacta || !$metodo_envio_id || !$metodo_pago_id) {
-        $error = "Por favor completa todos los campos requeridos.";
-    } else {
-        try {
-            // Si la ciudad no existe, agregarla
-            if (!$ciudad_id) {
-                $stmt_ciudad = $conn->prepare("
-                    INSERT INTO ciudades (Nombre_Ciudad, DepartamentoID) 
-                    VALUES (:municipio, :departamento_id)
-                ");
-                $stmt_ciudad->bindParam(':municipio', $municipio);
-                $stmt_ciudad->bindParam(':departamento_id', $departamento_id);
-                $stmt_ciudad->execute();
-                $ciudad_id = $conn->lastInsertId();
-            }
-
-            // Comenzar la transacción para registrar la venta
-            $conn->beginTransaction();
-            $stmt_venta = $conn->prepare("
-                INSERT INTO ventas (UsuarioID, FechaVenta, Total, MetodoEnvioID, CiudadID, DireccionCompleta, EstadoPago)
-                VALUES (:usuario_id, NOW(), :total, :metodo_envio_id, :ciudad_id, :direccion, 'Pendiente')
-            ");
-            $total = array_sum(array_map(fn($item) => $item['Precio'] * $item['Cantidad'], $carrito));
-            $stmt_venta->bindParam(':usuario_id', $usuario_id);
-            $stmt_venta->bindParam(':total', $total);
-            $stmt_venta->bindParam(':metodo_envio_id', $metodo_envio_id);
-            $stmt_venta->bindParam(':ciudad_id', $ciudad_id);
-            $stmt_venta->bindParam(':direccion', $direccion_exacta);
-            $stmt_venta->execute();
-
-            $venta_id = $conn->lastInsertId();
-
-            // Insertar los productos vendidos en la tabla detalles_ventas
-            foreach ($carrito as $item) {
-                $stmt_detalle = $conn->prepare("
-                    INSERT INTO detalles_ventas (VentaID, ProductoID, Cantidad, Precio)
-                    VALUES (:venta_id, :producto_id, :cantidad, :precio)
-                ");
-                $stmt_detalle->bindParam(':venta_id', $venta_id);
-                $stmt_detalle->bindParam(':producto_id', $item['ProductoID']);
-                $stmt_detalle->bindParam(':cantidad', $item['Cantidad']);
-                $stmt_detalle->bindParam(':precio', $item['Precio']);
-                $stmt_detalle->execute();
-            }
-
-            // Eliminar productos del carrito
-            $stmt_eliminar_carrito = $conn->prepare("DELETE FROM carrito_compras WHERE UsuarioID = :usuario_id");
-            $stmt_eliminar_carrito->bindParam(':usuario_id', $usuario_id);
-            $stmt_eliminar_carrito->execute();
-
-            // Confirmar la transacción
-            $conn->commit();
-
-            // Redirigir a la página de confirmación
-            header("Location: confirmacion.php?venta_id=$venta_id");
-            exit;
-        } catch (Exception $e) {
-            $conn->rollBack();
-            $error = "Error al procesar la compra: " . $e->getMessage();
-        }
-    }
-}
 ?>
 
 <!DOCTYPE html>
@@ -134,6 +62,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout</title>
     <link rel="stylesheet" href="../assets/css/checkout.css">
+    <style>
+        .suggestions {
+            border: 1px solid #ccc;
+            max-height: 150px;
+            overflow-y: auto;
+            position: absolute;
+            background-color: #fff;
+            z-index: 1000;
+            width: calc(100% - 20px);
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 5px;
+        }
+
+        .suggestion-item {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .suggestion-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .no-results {
+            padding: 10px;
+            color: #999;
+            font-style: italic;
+        }
+    </style>
 </head>
 <body>
     <header class="header">
@@ -142,18 +98,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <section class="checkout-section">
         <h2>Finalizar Compra</h2>
-        <?php if (!empty($error)): ?>
-            <p class="error"><?= htmlspecialchars($error) ?></p>
-        <?php endif; ?>
+
+        <h3>Tu Carrito</h3>
+        <ul>
+            <?php foreach ($carrito as $item): ?>
+                <li><?= htmlspecialchars($item['Nombre']) ?> (x<?= htmlspecialchars($item['Cantidad']) ?>) - $<?= number_format($item['Precio'] * $item['Cantidad'], 2) ?></li>
+            <?php endforeach; ?>
+        </ul>
 
         <form method="POST">
-            <h3>Tu Carrito</h3>
-            <ul>
-                <?php foreach ($carrito as $item): ?>
-                    <li><?= htmlspecialchars($item['Nombre']) ?> (x<?= htmlspecialchars($item['Cantidad']) ?>) - $<?= number_format($item['Precio'] * $item['Cantidad'], 2) ?></li>
-                <?php endforeach; ?>
-            </ul>
-
             <h3>Dirección</h3>
             <label for="departamento">Departamento:</label>
             <select name="departamento" id="departamento" required>
@@ -162,6 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <option value="<?= htmlspecialchars($departamento['DepartamentoID']) ?>"><?= htmlspecialchars($departamento['Nombre_Departamento']) ?></option>
                 <?php endforeach; ?>
             </select>
+
             <label for="municipio">Municipio:</label>
             <input type="text" name="municipio" id="municipio" placeholder="Escriba su municipio" required autocomplete="off">
             <input type="hidden" name="ciudad_id" id="ciudad_id">
@@ -185,11 +139,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <option value="<?= htmlspecialchars($envio['MetodoEnvioID']) ?>"><?= htmlspecialchars($envio['Nombre']) ?></option>
                 <?php endforeach; ?>
             </select>
+
             <button type="submit" class="btn">Finalizar Compra</button>
             <a href="carrito.php" class="btn btn-secondary">Volver al Carrito</a>
         </form>
     </section>
 
-    <script src="../assets/js/checkout.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+    const municipioInput = document.getElementById("municipio");
+    const departamentoSelect = document.getElementById("departamento");
+    const municipioSuggestions = document.getElementById("municipio-suggestions");
+    const ciudadIdInput = document.getElementById("ciudad_id");
+
+    municipioInput.addEventListener("input", function () {
+        const search = this.value.trim();
+        const departamentoId = departamentoSelect.value;
+
+        municipioSuggestions.innerHTML = "";
+        ciudadIdInput.value = "";
+
+        if (search.length < 2 || !departamentoId) return;
+
+        // Ruta corregida a ../api/municipios.php
+        fetch(`../api/municipios.php?search=${encodeURIComponent(search)}&departamento_id=${encodeURIComponent(departamentoId)}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log("Respuesta del servidor:", data); // Depuración en la consola
+
+                if (data.success && data.municipios.length > 0) {
+                    municipioSuggestions.innerHTML = "";
+                    data.municipios.forEach(municipio => {
+                        const suggestion = document.createElement("div");
+                        suggestion.classList.add("suggestion-item");
+                        suggestion.textContent = municipio.Nombre_Ciudad;
+                        suggestion.dataset.ciudadId = municipio.CiudadID;
+
+                        suggestion.addEventListener("click", function () {
+                            municipioInput.value = municipio.Nombre_Ciudad;
+                            ciudadIdInput.value = municipio.CiudadID;
+                            municipioSuggestions.innerHTML = ""; // Limpiar las sugerencias
+                        });
+
+                        municipioSuggestions.appendChild(suggestion);
+                    });
+                } else {
+                    municipioSuggestions.innerHTML = `<div class="no-results">Sin resultados</div>`;
+                }
+            })
+            .catch(error => console.error("Error al buscar municipios:", error));
+    });
+
+    municipioInput.addEventListener("blur", function () {
+        setTimeout(() => municipioSuggestions.innerHTML = "", 200);
+    });
+
+    departamentoSelect.addEventListener("change", function () {
+        municipioInput.value = "";
+        ciudadIdInput.value = "";
+        municipioSuggestions.innerHTML = "";
+    });
+});
+
+    </script>
 </body>
 </html>

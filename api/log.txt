@@ -1,0 +1,31 @@
+Search: texto, DepartamentoID: 1
+Array
+(
+    [search] => texto
+    [departamento_id] => 3
+)
+Array
+(
+    [search] => MEDE
+    [departamento_id] => 1
+)
+Array
+(
+    [search] => MEDE
+    [departamento_id] => 1
+)
+Array
+(
+    [search] => ME
+    [departamento_id] => 1
+)
+Array
+(
+    [search] => MED
+    [departamento_id] => 1
+)
+Array
+(
+    [search] => 67
+    [departamento_id] => 10
+)

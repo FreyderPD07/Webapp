@@ -1,0 +1,25 @@
+
+            SELECT CiudadID, Nombre_Ciudad 
+            FROM ciudades 
+            WHERE Nombre_Ciudad LIKE :search AND DepartamentoID = :departamento_id
+        
+
+            SELECT CiudadID, Nombre_Ciudad 
+            FROM ciudades 
+            WHERE Nombre_Ciudad LIKE :search AND DepartamentoID = :departamento_id
+        
+SELECT CiudadID, Nombre_Ciudad 
+                  FROM ciudades 
+                  WHERE Nombre_Ciudad LIKE '%MEDE%' AND DepartamentoID = 1;
+SELECT CiudadID, Nombre_Ciudad 
+                  FROM ciudades 
+                  WHERE Nombre_Ciudad LIKE '%MEDE%' AND DepartamentoID = 1;
+SELECT CiudadID, Nombre_Ciudad 
+                  FROM ciudades 
+                  WHERE Nombre_Ciudad LIKE '%ME%' AND DepartamentoID = 1;
+SELECT CiudadID, Nombre_Ciudad 
+                  FROM ciudades 
+                  WHERE Nombre_Ciudad LIKE '%MED%' AND DepartamentoID = 1;
+SELECT CiudadID, Nombre_Ciudad 
+                  FROM ciudades 
+                  WHERE Nombre_Ciudad LIKE '%67%' AND DepartamentoID = 10;
